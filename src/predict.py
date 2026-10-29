@@ -27,11 +27,14 @@ class PredictionResult:
 
 
 def load_model():
+    """
+    Safely load the trained RandomForest pipeline bundle.
+    If the model artifact is missing, automatically trains and serializes the model.
+    """
     paths = project_paths()
     if not paths.model_pkl.exists():
-        raise FileNotFoundError(
-            f"Model not found at {paths.model_pkl}. Train it first with: python src/train_model.py"
-        )
+        from src.train_model import main as train_main
+        train_main()
     return joblib.load(paths.model_pkl)
 
 
